@@ -77,6 +77,22 @@ class S {
   static String get shortName => _am ? 'አጭር ስም' : 'Short Name';
   static String get address => _am ? 'አድራሻ' : 'Address';
   static String get nameAndShortRequired => _am ? 'ስም እና አጭር ስም ያስፈልጋል' : 'Name and short name are required';
+  static String get editArea => _am ? 'አካባቢ አስተካክል' : 'Edit Area';
+  static String get hideArea => _am ? 'አካባቢ ደብቅ' : 'Hide Area';
+  static String get unhideArea => _am ? 'አካባቢ አሳይ' : 'Show Area';
+  static String get deleteAreaTitle => _am ? 'አካባቢ ሰርዝ' : 'Delete Area';
+  static String get deleteAreaConfirm => _am ? 'ይህን አካባቢ ወደ ቆሻሻ ማጠራቀሚያ መላክ ይፈልጋሉ?' : 'Move this area to trash?';
+  static String get permanentDeleteConfirm => _am ? 'ይህን አካባቢ በቋሚነት መሰረዝ ይፈልጋሉ? ይህ ድርጊት ሊመለስ አይችልም።' : 'Permanently delete this area? This action cannot be undone.';
+  static String get trash => _am ? 'ቆሻሻ ማጠራቀሚያ' : 'Trash';
+  static String get restore => _am ? 'መልስ' : 'Restore';
+  static String get permanentDelete => _am ? 'በቋሚነት ሰርዝ' : 'Delete Permanently';
+  static String get noDeletedAreas => _am ? 'ቆሻሻ ማጠራቀሚያ ባዶ ነው' : 'Trash is empty';
+  static String get areaHidden => _am ? 'አካባቢ ተደብቋል' : 'Area hidden';
+  static String get areaVisible => _am ? 'አካባቢ ይታያል' : 'Area visible';
+  static String get areaDeleted => _am ? 'አካባቢ ተሰርዟል' : 'Area moved to trash';
+  static String get areaRestored => _am ? 'አካባቢ ተመልሷል' : 'Area restored';
+  static String get hidden => _am ? 'የተደበቀ' : 'Hidden';
+  static String get showHidden => _am ? 'የተደበቁ አሳይ' : 'Show Hidden';
 
   // ── Area Home ──
   static String get notifications => _am ? 'ማሳወቂያዎች' : 'Notifications';

@@ -19,10 +19,23 @@ class AreaRepository {
     });
   }
 
+  /// Active (non-deleted) areas, ordered by name.
   Stream<List<Area>> watchAllAreas() {
     return _firestore
         .collection(FirestorePaths.areas())
+        .where('deletedAt', isNull: true)
         .orderBy('name')
+        .snapshots()
+        .map((snapshot) =>
+            snapshot.docs.map((doc) => Area.fromDoc(doc)).toList());
+  }
+
+  /// Soft-deleted areas (trash), ordered by deletion time.
+  Stream<List<Area>> watchDeletedAreas() {
+    return _firestore
+        .collection(FirestorePaths.areas())
+        .where('deletedAt', isNull: false)
+        .orderBy('deletedAt', descending: true)
         .snapshots()
         .map((snapshot) =>
             snapshot.docs.map((doc) => Area.fromDoc(doc)).toList());
@@ -65,6 +78,32 @@ class AreaRepository {
         .update(area.toUpdateMap());
   }
 
+  Future<void> hideArea(String areaId, bool hidden) async {
+    await _firestore.doc(FirestorePaths.area(areaId)).update({
+      'isHidden': hidden,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Soft-delete: move to trash by setting deletedAt.
+  Future<void> softDeleteArea(String areaId, String deletedBy) async {
+    await _firestore.doc(FirestorePaths.area(areaId)).update({
+      'deletedAt': FieldValue.serverTimestamp(),
+      'deletedBy': deletedBy,
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Restore from trash.
+  Future<void> restoreArea(String areaId) async {
+    await _firestore.doc(FirestorePaths.area(areaId)).update({
+      'deletedAt': null,
+      'deletedBy': '',
+      'updatedAt': FieldValue.serverTimestamp(),
+    });
+  }
+
+  /// Permanently delete.
   Future<void> deleteArea(String areaId) async {
     await _firestore.doc(FirestorePaths.area(areaId)).delete();
   }
