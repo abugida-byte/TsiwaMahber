@@ -20,25 +20,27 @@ class AreaRepository {
   }
 
   /// Active (non-deleted) areas, ordered by name.
+  /// Filters client-side to avoid requiring a composite index.
   Stream<List<Area>> watchAllAreas() {
     return _firestore
         .collection(FirestorePaths.areas())
-        .where('deletedAt', isNull: true)
         .orderBy('name')
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Area.fromDoc(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Area.fromDoc(doc))
+            .where((area) => !area.isDeleted)
+            .toList());
   }
 
-  /// Soft-deleted areas (trash), ordered by deletion time.
+  /// Soft-deleted areas (trash).
   Stream<List<Area>> watchDeletedAreas() {
     return _firestore
         .collection(FirestorePaths.areas())
-        .where('deletedAt', isNull: false)
-        .orderBy('deletedAt', descending: true)
         .snapshots()
-        .map((snapshot) =>
-            snapshot.docs.map((doc) => Area.fromDoc(doc)).toList());
+        .map((snapshot) => snapshot.docs
+            .map((doc) => Area.fromDoc(doc))
+            .where((area) => area.isDeleted)
+            .toList());
   }
 
   Future<String?> ensureDefaultArea() async {
